@@ -56,8 +56,11 @@ export function updateColumns(prevCols, newCols, addSuccessToast) {
     added: [],
     modified: [],
     removed: prevCols
-      .map(col => col.column_name)
-      .filter(col => !databaseColumnNames.includes(col)),
+      .filter(
+        col =>
+          !(col.expression || databaseColumnNames.includes(col.column_name)),
+      )
+      .map(col => col.column_name),
     finalColumns: [],
   };
   newCols.forEach(col => {
@@ -89,6 +92,13 @@ export function updateColumns(prevCols, newCols, addSuccessToast) {
       columnChanges.finalColumns.push(currentCol);
     }
   });
+  // push all calculated columns
+  prevCols
+    .filter(col => col.expression)
+    .forEach(col => {
+      columnChanges.finalColumns.push(col);
+    });
+
   if (columnChanges.modified.length) {
     addSuccessToast(
       tn(
@@ -121,7 +131,7 @@ export function updateColumns(prevCols, newCols, addSuccessToast) {
 
 export async function fetchSyncedColumns(datasource) {
   const params = {
-    datasource_type: datasource.type,
+    datasource_type: datasource.type || datasource.datasource_type,
     database_name:
       datasource.database?.database_name || datasource.database?.name,
     catalog_name: datasource.catalog,

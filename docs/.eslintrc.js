@@ -1,3 +1,4 @@
+/* eslint-env node */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,21 +17,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-var _paq = (window._paq = window._paq || []);
-/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-/* We explicitly disable cookie tracking to avoid privacy issues */
-_paq.push(['disableCookies']);
-_paq.push(['trackPageView']);
-_paq.push(['enableLinkTracking']);
-(function () {
-  var u = 'https://analytics.apache.org/';
-  _paq.push(['setTrackerUrl', u + 'matomo.php']);
-  _paq.push(['setSiteId', '22']);
-  var d = document,
-    g = d.createElement('script'),
-    s = d.getElementsByTagName('script')[0];
-  g.async = true;
-  g.src = u + 'matomo.js';
-  s.parentNode.insertBefore(g, s);
-})();
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['@typescript-eslint', 'react', 'prettier'],
+  rules: {
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  ignorePatterns: ['build/**/*', '.docusaurus/**/*', 'node_modules/**/*'],
+};

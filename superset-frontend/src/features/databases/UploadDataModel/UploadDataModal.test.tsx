@@ -20,9 +20,12 @@ import fetchMock from 'fetch-mock';
 import UploadDataModal, {
   validateUploadFileExtension,
 } from 'src/features/databases/UploadDataModel';
-import { render, screen } from 'spec/helpers/testing-library';
-import userEvent from '@testing-library/user-event';
-import { waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  userEvent,
+} from 'spec/helpers/testing-library';
 import { UploadFile } from 'antd/lib/upload/interface';
 
 const csvProps = {
@@ -564,6 +567,7 @@ test('Columnar, does not render the rows', () => {
 });
 
 test('database and schema are correctly populated', async () => {
+  jest.setTimeout(10000);
   render(<UploadDataModal {...csvProps} />, {
     useRedux: true,
   });
@@ -666,7 +670,7 @@ test('CSV form post', async () => {
   expect(formData.get('table_name')).toBe('table1');
   const fileData = formData.get('file') as File;
   expect(fileData.name).toBe('test.csv');
-}, 10000); // longer timeout to decrease flakiness
+});
 
 test('Excel form post', async () => {
   render(<UploadDataModal {...excelProps} />, {
@@ -724,7 +728,7 @@ test('Excel form post', async () => {
   expect(formData.get('table_name')).toBe('table1');
   const fileData = formData.get('file') as File;
   expect(fileData.name).toBe('test.xls');
-}, 10000); // longer timeout to decrease flakiness
+});
 
 test('Columnar form post', async () => {
   render(<UploadDataModal {...columnarProps} />, {
@@ -782,7 +786,7 @@ test('Columnar form post', async () => {
   expect(formData.get('table_name')).toBe('table1');
   const fileData = formData.get('file') as File;
   expect(fileData.name).toBe('test.parquet');
-}, 10000); // longer timeout to decrease flakiness
+});
 
 test('CSV, validate file extension returns false', () => {
   const invalidFileNames = ['out', 'out.exe', 'out.csv.exe', '.csv', 'out.xls'];
